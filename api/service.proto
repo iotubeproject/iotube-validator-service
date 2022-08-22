@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package api;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/crosschained-io/crosschained-service/api;api";
+
+service ValidatorService {
+    rpc QueryByID(QueryRequest) returns (Testimony) {
+        option (google.api.http) = {
+            get: "/query/{id}"
+        };
+    };
+}
+
+message QueryRequest {
+    bytes id = 1;
+}
+
+message Testimony {
+    bytes validator = 1;
+    bytes signature = 2;
+}

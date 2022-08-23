@@ -1,0 +1,43 @@
+iotexChainAPI: https://babel-api.mainnet.iotex.io
+databaseURL: <DATABASE_URL>
+interval: 6s
+assetRegistry:
+  mode: 2
+  contractAddr: "0xF0BDBEd6Eb1b4A701C5C0573C103A7677Fb08ed9"
+  startHeight: 17719000
+  assets:
+    - id: 1
+      address: "0x32492aC61580e7E42317579D43aB7C921C9406c4"
+      tubeID: 10002
+    - id: 1
+      address: "0xfEC51632aF0CF8075e6F391b5F7dC33E28B375C4"
+      tubeID: 10003
+    - id: 2
+      address: "0xC7c88394202C3CCe3d54557Ea60DDfDbB4a943Ac"
+      tubeID: 10002
+    - id: 2
+      address: "0x100Cb68fdEA6Fd2D1C3EC29C06Dd35A63f29547A"
+      tubeID: 10003
+    - id: 3
+      address: "0x144220970AC713b32398D82db2F7947AD2eB01e2"
+      tubeID: 10002
+    - id: 3
+      address: "0x8D9EFF68052e8F9Ec89179D1402eB57Dbd6d5048"
+      tubeID: 10003
+assetUpperBoundRegistry:
+  mode: 2
+monitors:
+  # iotex
+  - contractAddr: 0x9E3A18F6FB6a89aD7dC09f496CD497bCcb93D13B
+    chainAPI: https://babel-api.mainnet.iotex.io
+    batchSize: 1000
+    heightToConfirm: 1
+    startHeight: 17719000
+    validator: 0xd320b8a97d9f23af9301cbd1278bcba096f9e774
+  # bsc
+  - contractAddr: 0x10eA161Ab39aAcb58b7c00e87aB141d9AbCB0B70
+    chainAPI: https://bsc-dataseed.binance.org
+    batchSize: 1000
+    heightToConfirm: 20
+    startHeight: 18374000
+    validator: 0xd320b8a97d9f23af9301cbd1278bcba096f9e774

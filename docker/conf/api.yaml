@@ -1,0 +1,4 @@
+databaseURL: <DATABASE_URL>
+grpcPort: 8081
+httpPort: 8080
+validator: <VALIDATOR_ADDRESS>

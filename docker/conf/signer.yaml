@@ -1,0 +1,12 @@
+databaseURL: <DATABASE_URL>
+privateKey: <PRIVATE_KEY>
+interval: 60s
+tubes:
+  10002:
+    duration: 10m
+    amount: "1000000000000000000000"
+    quotaPerHour: "10000000000000000000000"
+  10003:
+    duration: 10m
+    amount: "1000000000000000000000"
+    quotaPerHour: "10000000000000000000000"

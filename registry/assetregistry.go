@@ -132,7 +132,13 @@ func NewAssetRegistry(
 }
 
 func (ar *AssetRegistry) Start(_ context.Context) error {
-	return ar.db.AutoMigrate(&Asset{}, &Tube{}, &AssetOnTube{}, &Meta{})
+	if err := ar.db.AutoMigrate(&Asset{}, &Tube{}, &AssetOnTube{}, &Meta{}); err != nil {
+		return err
+	}
+	return ar.db.Clauses(clause.OnConflict{DoNothing: true}).Create(&Meta{
+		Key:    "r_asset_registry_synced_height",
+		Height: 0,
+	}).Error
 }
 
 func (ar *AssetRegistry) Stop(_ context.Context) error {

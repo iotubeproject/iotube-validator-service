@@ -117,6 +117,10 @@ func newRelayerMonitor(
 	if err != nil {
 		return nil, err
 	}
+	patrolSize := batchSize * 6
+	if patrolSize > 5000 {
+		patrolSize = 5000 / batchSize * batchSize
+	}
 
 	return &RelayerMonitor{
 		MonitorBase: MonitorBase{
@@ -124,6 +128,7 @@ func newRelayerMonitor(
 			confirmHeight: heightToConfirm,
 			startHeight:   startHeight,
 			batchSize:     batchSize,
+			patrolSize:    patrolSize,
 			tubeID:        id.Uint64(),
 			recorder:      recorder,
 			assetRegistry: assetRegistry,
@@ -206,11 +211,13 @@ func (monitor *RelayerMonitor) Run() error {
 			txHash := e.Raw.TxHash
 			task, exist := taskMap[txHash]
 			if !exist {
-				return errors.Errorf("failed to find deposit for task in transaction %s", txHash)
-			}
-			if task.Status == types.Unknown {
-				task.Status = types.New
-				task.Fee = task.Fee.Add(decimal.NewFromBigInt(e.Amount, 0))
+				log.Printf("failed to find deposit for task in transaction %s", txHash)
+				task.Status = types.Inactive
+			} else {
+				if task.Status == types.Unknown {
+					task.Status = types.New
+					task.Fee = task.Fee.Add(decimal.NewFromBigInt(e.Amount, 0))
+				}
 			}
 		}
 	}

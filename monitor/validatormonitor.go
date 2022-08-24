@@ -52,6 +52,10 @@ func NewValidatorMonitor(
 	if err != nil {
 		return nil, err
 	}
+	patrolSize := batchSize * 6
+	if patrolSize > 5000 {
+		patrolSize = 5000 / batchSize * batchSize
+	}
 
 	return &ValidatorMonitor{
 		MonitorBase: MonitorBase{
@@ -60,6 +64,7 @@ func NewValidatorMonitor(
 			confirmHeight: heightToConfirm,
 			startHeight:   startHeight,
 			batchSize:     batchSize,
+			patrolSize:    patrolSize,
 			tubeID:        id.Uint64(),
 			recorder:      recorder,
 			query:         query,

@@ -57,6 +57,7 @@ type (
 		startHeight      uint64
 		confirmHeight    uint64
 		batchSize        uint64
+		patrolSize       uint64
 		lastPatrolHeight uint64
 		tubeID           uint64
 		recorder         *Recorder
@@ -187,20 +188,21 @@ func (monitor *MonitorBase) sync() (bool, uint64, uint64, []*contract.Event, err
 	if startHeight < monitor.startHeight {
 		startHeight = monitor.startHeight
 	}
-	patrolSize := monitor.batchSize * 6
-	if monitor.lastPatrolHeight == 0 {
-		if startHeight > patrolSize {
-			monitor.lastPatrolHeight = startHeight - patrolSize
-			if monitor.lastPatrolHeight < monitor.startHeight {
-				monitor.lastPatrolHeight = monitor.startHeight
+	nextSyncedHeight := startHeight + monitor.batchSize - 1
+	if monitor.patrolSize > 0 {
+		if monitor.lastPatrolHeight == 0 {
+			if startHeight > monitor.patrolSize {
+				monitor.lastPatrolHeight = startHeight - monitor.patrolSize
+				if monitor.lastPatrolHeight < monitor.startHeight {
+					monitor.lastPatrolHeight = monitor.startHeight
+				}
+			}
+		} else {
+			if nextSyncedHeight >= monitor.lastPatrolHeight+monitor.patrolSize {
+				monitor.lastPatrolHeight, startHeight = startHeight, monitor.lastPatrolHeight
 			}
 		}
-	} else {
-		if startHeight > monitor.lastPatrolHeight+patrolSize {
-			monitor.lastPatrolHeight, startHeight = startHeight, monitor.lastPatrolHeight
-		}
 	}
-	nextSyncedHeight := startHeight + monitor.batchSize - 1
 	tipHeight, events, err := monitor.fetchEvents(startHeight, nextSyncedHeight)
 	if err != nil {
 		return false, 0, 0, nil, err

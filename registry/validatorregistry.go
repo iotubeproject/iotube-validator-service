@@ -70,7 +70,13 @@ func NewValidatorRegistry(
 }
 
 func (ar *ValidatorRegistry) Start(_ context.Context) error {
-	return ar.db.AutoMigrate(&Asset{}, &Tube{}, &AssetOnTube{}, &Meta{})
+	if err := ar.db.AutoMigrate(&Asset{}, &Tube{}, &AssetOnTube{}, &Meta{}); err != nil {
+		return err
+	}
+	return ar.db.Clauses(clause.OnConflict{DoNothing: true}).Create(&Meta{
+		Key:    "r_validator_registry_synced_height",
+		Height: 0,
+	}).Error
 }
 
 func (ar *ValidatorRegistry) Stop(_ context.Context) error {

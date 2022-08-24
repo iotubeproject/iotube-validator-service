@@ -63,7 +63,13 @@ func NewAssetUpperBoundRegistry(
 }
 
 func (ar *AssetUpperBoundRegistry) Start(_ context.Context) error {
-	return ar.db.AutoMigrate(&Asset{}, &Tube{}, &AssetOnTube{}, &Meta{})
+	if err := ar.db.AutoMigrate(&Asset{}, &Tube{}, &AssetOnTube{}, &Meta{}); err != nil {
+		return err
+	}
+	return ar.db.Clauses(clause.OnConflict{DoNothing: true}).Create(&Meta{
+		Key:    "r_asset_upper_bound_registry_synced_height",
+		Height: 0,
+	}).Error
 }
 
 func (ar *AssetUpperBoundRegistry) Stop(_ context.Context) error {

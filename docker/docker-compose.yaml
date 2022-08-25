@@ -8,6 +8,10 @@ services:
     ports:
       - 8081:8081
       - 8080:8080
+    # environment:
+    #   VALIDATOR_DB_URL: ''
+    #   VALIDATOR_PRIVATE_KEY: ''
+    #   MONITOR_DB_URL: ''
     volumes:
       - ./conf/api.yaml:/etc/iotube/api.yaml:ro
     command: validator -api /etc/iotube/api.yaml
@@ -16,6 +20,10 @@ services:
     container_name: iotube-validator-monitor
     image: iotexdev/iotube-validator-service:latest
     restart: always
+    # environment:
+    #   VALIDATOR_DB_URL: ''
+    #   VALIDATOR_PRIVATE_KEY: ''
+    #   MONITOR_DB_URL: ''
     volumes:
       - ./conf/monitor.yaml:/etc/iotube/monitor.yaml:ro
     command: validator -monitor /etc/iotube/monitor.yaml
@@ -24,6 +32,10 @@ services:
     container_name: iotube-validator-signer
     image: iotexdev/iotube-validator-service:latest
     restart: always
+    # environment:
+    #   VALIDATOR_DB_URL: ''
+    #   VALIDATOR_PRIVATE_KEY: ''
+    #   MONITOR_DB_URL: ''
     volumes:
       - ./conf/signer.yaml:/etc/iotube/signer.yaml:ro
     command: validator -signer /etc/iotube/signer.yaml

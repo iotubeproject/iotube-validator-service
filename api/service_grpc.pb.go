@@ -30,7 +30,7 @@ func NewValidatorServiceClient(cc grpc.ClientConnInterface) ValidatorServiceClie
 
 func (c *validatorServiceClient) QueryByID(ctx context.Context, in *QueryRequest, opts ...grpc.CallOption) (*Testimony, error) {
 	out := new(Testimony)
-	err := c.cc.Invoke(ctx, "/proto.ValidatorService/QueryByID", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.ValidatorService/QueryByID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func _ValidatorService_QueryByID_Handler(srv interface{}, ctx context.Context, d
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.ValidatorService/QueryByID",
+		FullMethod: "/api.ValidatorService/QueryByID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ValidatorServiceServer).QueryByID(ctx, req.(*QueryRequest))
@@ -84,7 +84,7 @@ func _ValidatorService_QueryByID_Handler(srv interface{}, ctx context.Context, d
 }
 
 var _ValidatorService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.ValidatorService",
+	ServiceName: "api.ValidatorService",
 	HandlerType: (*ValidatorServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -93,5 +93,5 @@ var _ValidatorService_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/service.proto",
+	Metadata: "api/service.proto",
 }

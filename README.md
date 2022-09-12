@@ -1,5 +1,6 @@
-# crosschained-service
-crosschained backend service for validator and relayer
+# iotube validator service
+
+iotube services for validator and relayer
 
 ## Get Started
 ### Requirement

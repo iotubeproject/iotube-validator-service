@@ -14,7 +14,7 @@ docker-compose -f docker-compose.yaml stop
 modify the configuration of DATABASE_URL in ./conf/monitor.yaml and then 
 ```bash
 #start
-docker-compose -f docker-compose.yaml up iotube-validator-monitor -d 
+docker-compose -f docker-compose.yaml up iotube-validator-monitor
 #stop
 docker-compose -f docker-compose.yaml stop iotube-validator-monitor
 #restart
@@ -26,7 +26,7 @@ modify the configuration of DATABASE_URL,PRIVATE_KEY in ./conf/signer.yaml and t
 
 ```bash
 #start
-docker-compose -f docker-compose.yaml up iotube-validator-signer -d
+docker-compose -f docker-compose.yaml up iotube-validator-signer
 #stop
 docker-compose -f docker-compose.yaml stop iotube-validator-signer
 #restart
@@ -38,7 +38,7 @@ modify the configuration of DATABASE_URL,VALIDATOR_ADDRESS in ./conf/api.yaml  a
 
 ```bash
 #start
-docker-compose -f docker-compose.yaml up iotube-validator-api -d
+docker-compose -f docker-compose.yaml up iotube-validator-api
 #stop
 docker-compose -f docker-compose.yaml stop iotube-validator-api
 #restart
@@ -47,5 +47,5 @@ docker-compose -f docker-compose.yaml restart iotube-validator-api
 
 ### Build image
 ```bash
-docker build -t org/image:latest .
+docker build -t org/image_name:image_tag -f ../Dockerfile
 ```

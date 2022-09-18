@@ -11,8 +11,7 @@ RUN go mod download
 
 COPY . .
 
-RUN mkdir -p $GOPATH/pkg/linux_amd64/github.com/iotexproject/ && \
-    make proto && make build
+RUN mkdir -p $GOPATH/pkg/linux_amd64/github.com/iotexproject/ && make build
 
 FROM alpine:latest
 

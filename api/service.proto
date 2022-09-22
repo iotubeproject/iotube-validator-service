@@ -15,10 +15,10 @@ service ValidatorService {
 }
 
 message QueryRequest {
-    bytes id = 1;
+    string id = 1;
 }
 
 message Testimony {
-    bytes validator = 1;
-    bytes signature = 2;
+    string validator = 1;
+    string signature = 2;
 }

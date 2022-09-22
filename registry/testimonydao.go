@@ -2,7 +2,6 @@ package registry
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"net/http"
@@ -70,7 +69,7 @@ func (dao *TestimonyDAO) Testimony(validator common.Address, id common.Hash) ([]
 	switch genre {
 	default:
 		return nil, ErrUnknownGenre
-	case NotRegistered:
+	case NOT_REGISTERED:
 		return nil, ErrNotRegistered
 	case CONTRACT:
 		bs, err := hex.DecodeString(uri)
@@ -90,38 +89,14 @@ func (dao *TestimonyDAO) Testimony(validator common.Address, id common.Hash) ([]
 		}
 		signature = iter.Event.Testimony
 	case GRPC_API:
-		conn, err := grpc.Dial(uri, grpc.WithTransportCredentials(insecure.NewCredentials()))
+		signature, err = FetchSignatureViaGRPC(uri, id)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to fetch signature via grpc")
 		}
-
-		defer conn.Close()
-		remote := api.NewValidatorServiceClient(conn)
-		response, err := remote.QueryByID(context.Background(), &api.QueryRequest{Id: id.Bytes()})
-		if err != nil {
-			return nil, err
-		}
-
-		signature = response.GetSignature()
 	case HTTP:
-		response, err := http.Get(uri + "/" + base64.URLEncoding.EncodeToString(id.Bytes()))
+		signature, err = FetchSignatureViaHttp(uri, id)
 		if err != nil {
-			return nil, err
-		}
-		if response.StatusCode != 200 {
-			return nil, errors.Errorf("failed to query signature, with response status %d", response.StatusCode)
-		}
-		defer response.Body.Close()
-		var value struct {
-			Validator string `json:"validator"`
-			Signature string `json:"signature"`
-		}
-		if err := json.NewDecoder(response.Body).Decode(&value); err != nil {
-			return nil, err
-		}
-		signature, err = base64.StdEncoding.DecodeString(value.Signature)
-		if err != nil {
-			return nil, errors.Wrapf(err, "failed to decode signature %s", value.Signature)
+			return nil, errors.Wrap(err, "failed to fetch signature via http")
 		}
 	}
 	if err := checkSignature(id.Bytes(), signature, validator); err != nil {
@@ -129,4 +104,40 @@ func (dao *TestimonyDAO) Testimony(validator common.Address, id common.Hash) ([]
 	}
 
 	return signature, nil
+}
+
+func FetchSignatureViaGRPC(uri string, id common.Hash) ([]byte, error) {
+	conn, err := grpc.Dial(uri, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+
+	defer conn.Close()
+	remote := api.NewValidatorServiceClient(conn)
+	response, err := remote.QueryByID(context.Background(), &api.QueryRequest{Id: id.Hex()})
+	if err != nil {
+		return nil, err
+	}
+
+	return hex.DecodeString(response.GetSignature())
+}
+
+func FetchSignatureViaHttp(uri string, id common.Hash) ([]byte, error) {
+	response, err := http.Get(uri + "/" + id.Hex())
+	if err != nil {
+		return nil, err
+	}
+	if response.StatusCode != 200 {
+		return nil, errors.Errorf("failed to query signature, with response status %d", response.StatusCode)
+	}
+	defer response.Body.Close()
+	var value struct {
+		Validator string `json:"validator"`
+		Signature string `json:"signature"`
+	}
+	if err := json.NewDecoder(response.Body).Decode(&value); err != nil {
+		return nil, err
+	}
+
+	return hex.DecodeString(value.Signature)
 }

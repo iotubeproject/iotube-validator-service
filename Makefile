@@ -2,7 +2,10 @@ GOCMD=go
 GOBUILD=$(GOCMD) build
 GOTEST=$(GOCMD) test
 
-build: build-validator build-relayer
+build: build-validator build-relayer build-query
+
+build-query:
+	$(GOBUILD) -o ./bin/query cmd/query/main.go
 
 build-relayer:
 	$(GOBUILD) -o ./bin/relayer cmd/relayer/main.go

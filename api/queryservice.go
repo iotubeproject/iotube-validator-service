@@ -2,10 +2,12 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
 	"log"
 	"net"
 	"net/http"
+	"strings"
 
 	grpc "google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -87,10 +89,10 @@ func (s *APIService) Stop(ctx context.Context) error {
 }
 
 func (s *APIService) QueryByID(ctx context.Context, request *QueryRequest) (*Testimony, error) {
-	log.Printf("Receive query request for %x\n", request.Id)
-	signature, err := s.recorder.Signature(common.BytesToHash(request.Id))
+	log.Printf("Receive query request for %s\n", request.Id)
+	signature, err := s.recorder.Signature(common.HexToHash(strings.TrimPrefix(request.Id, "0x")))
 	if err != nil {
 		return nil, err
 	}
-	return &Testimony{Validator: s.validatorAddr[:], Signature: signature}, nil
+	return &Testimony{Validator: s.validatorAddr.Hex(), Signature: hex.EncodeToString(signature)}, nil
 }

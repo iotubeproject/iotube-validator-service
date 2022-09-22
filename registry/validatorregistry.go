@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	NotRegistered = iota
+	NOT_REGISTERED = iota
 	CONTRACT
 	GRPC_API
 	HTTP

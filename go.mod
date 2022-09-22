@@ -10,6 +10,7 @@ require (
 	github.com/lib/pq v1.3.0
 	github.com/pkg/errors v0.9.1
 	github.com/shopspring/decimal v1.2.0
+	github.com/spf13/cobra v0.0.3
 	go.uber.org/config v1.4.0
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/lint v0.0.0-20201208152925-83fdc39ff7b5 // indirect

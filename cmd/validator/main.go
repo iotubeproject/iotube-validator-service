@@ -93,6 +93,9 @@ func createAPIService() (*api.APIService, error) {
 	if err := yaml.Get(config.Root).Populate(&cfg); err != nil {
 		return nil, err
 	}
+	if dburl, ok := os.LookupEnv("API_DB_URL"); ok {
+		cfg.DatabaseURL = dburl
+	}
 	validatorAddr := common.HexToAddress(cfg.Validator)
 	log.Println("validator:", validatorAddr)
 

@@ -13,6 +13,7 @@ import (
 	"google.golang.org/grpc/reflection"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 )
@@ -23,6 +24,7 @@ type (
 		httpPort      int
 		port          int
 		validatorAddr common.Address
+		validateAddr  bool
 		recorder      *Recorder
 		grpcServer    *grpc.Server
 		httpServer    *http.Server
@@ -39,12 +41,14 @@ func NewAPIService(
 	if err != nil {
 		return nil, err
 	}
+	zeroAddr := common.Address{}
 
 	return &APIService{
 		port:          port,
 		httpPort:      httpPort,
 		recorder:      recorder,
 		validatorAddr: validatorAddr,
+		validateAddr:  validatorAddr.Hex() != zeroAddr.Hex(),
 	}, nil
 }
 
@@ -65,7 +69,7 @@ func (s *APIService) Start(ctx context.Context) error {
 	if err := RegisterValidatorServiceHandlerServer(ctx, gwmux, s); err != nil {
 		return err
 	}
-	if err := gwmux.HandlePath("GET", "/health", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+	if err := gwmux.HandlePath("GET", "/health", func(w http.ResponseWriter, _ *http.Request, _ map[string]string) {
 		log.Println("health check")
 		w.Write([]byte("active"))
 	}); err != nil {
@@ -90,9 +94,18 @@ func (s *APIService) Stop(ctx context.Context) error {
 
 func (s *APIService) QueryByID(ctx context.Context, request *QueryRequest) (*Testimony, error) {
 	log.Printf("Receive query request for %s\n", request.Id)
-	signature, err := s.recorder.Signature(common.HexToHash(strings.TrimPrefix(request.Id, "0x")))
+	id := common.HexToHash(strings.TrimPrefix(request.Id, "0x"))
+	signature, err := s.recorder.Signature(id)
 	if err != nil {
 		return nil, err
 	}
-	return &Testimony{Validator: s.validatorAddr.Hex(), Signature: hex.EncodeToString(signature)}, nil
+	pubkey, err := crypto.SigToPub(id[:], signature)
+	if err != nil {
+		return nil, err
+	}
+	validator := crypto.PubkeyToAddress(*pubkey)
+	if s.validateAddr && validator != s.validatorAddr {
+		return nil, errors.Errorf("invalid validator")
+	}
+	return &Testimony{Validator: validator.Hex(), Signature: hex.EncodeToString(signature)}, nil
 }

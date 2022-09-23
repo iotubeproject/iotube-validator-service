@@ -8,23 +8,21 @@ services:
       - '5432:5432'
     command: ["postgres", "-cshared_preload_libraries=pg_stat_statements"]
     environment:
-      POSTGRES_USER: iotube-validator
-      POSTGRES_PASSWORD: iotube-validator
-      POSTGRES_DB: iotube-validator
+      POSTGRES_USER: pg_user
+      POSTGRES_PASSWORD: pg_password
+      POSTGRES_DB: iotube_validator
     volumes:
       - ./postgres:/var/lib/postgresql/data
 
   iotube-validator-api:
     container_name: iotube-validator-api
-    image: iotexdev/iotube-validator-service:latest
+    image: $IMAGE
     restart: always
     ports:
       - 8081:8081
       - 8080:8080
-    environment:
-      VALIDATOR_DB_URL: 'postgresql://iotube-validator:iotube-validator@postgres:5432/iotube-validator'
-      VALIDATOR_PRIVATE_KEY: ''
-      MONITOR_DB_URL: 'postgresql://iotube-validator:iotube-validator@postgres:5432/iotube-validator'
+    env_file:
+      - env-db
     depends_on:
       - postgres
     volumes:
@@ -33,26 +31,22 @@ services:
   
   iotube-validator-monitor:
     container_name: iotube-validator-monitor
-    image: iotexdev/iotube-validator-service:latest
+    image: $IMAGE
     restart: always
     depends_on:
       - postgres
-    environment:
-      VALIDATOR_DB_URL: 'postgresql://iotube-validator:iotube-validator@postgres:5432/iotube-validator'
-      VALIDATOR_PRIVATE_KEY: ''
-      MONITOR_DB_URL: 'postgresql://iotube-validator:iotube-validator@postgres:5432/iotube-validator'
+    env_file:
+      - env-db
     volumes:
       - ./conf/monitor.yaml:/etc/iotube/monitor.yaml:ro
     command: validator -monitor /etc/iotube/monitor.yaml
 
   iotube-validator-signer:
     container_name: iotube-validator-signer
-    image: iotexdev/iotube-validator-service:latest
+    image: $IMAGE
     restart: always
-    environment:
-      VALIDATOR_DB_URL: 'postgresql://iotube-validator:iotube-validator@postgres:5432/iotube-validator'
-      VALIDATOR_PRIVATE_KEY: ''
-      MONITOR_DB_URL: 'postgresql://iotube-validator:iotube-validator@postgres:5432/iotube-validator'
+    env_file:
+      - env-db
     depends_on:
       - postgres
     volumes:

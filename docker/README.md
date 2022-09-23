@@ -9,6 +9,9 @@ docker-compose -f docker-compose.yaml up -d
 
 #stop
 docker-compose -f docker-compose.yaml stop
+
+#restart
+docker-compose -f docker-compose.yaml restart
 ```
 
 ### Validator Monitor Service

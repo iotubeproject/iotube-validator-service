@@ -1,21 +1,50 @@
-### Check & modify environment variables in .env
-
-
-### All Service with one click
-modify the configuration of DATABASE_URL in ./conf/monitor.yaml，DATABASE_URL,PRIVATE_KEY in ./conf/signer.yaml，DATABASE_URL,VALIDATOR_ADDRESS in ./conf/api.yaml and then
+# Run Services using Docker
+## Build Image
 ```bash
-#start
-docker-compose -f docker-compose.yaml up -d 
+docker build -t iotube/iotube-validator-service:latest ..
+```
 
-#stop
+### Run with self hosted Postgres(DB)
+
+Config .env-db file with validator private key.
+
+#### Start all services (monitor, signer, api, DB)
+```
+docker-compose -f docker-compose-db.yaml up -d
+```
+
+#### Stop
+```
+docker-compose -f docker-compose-db.yaml stop
+```
+
+#### Restart
+```
+docker-compose -f docker-compose-db.yaml restart
+```
+Please notet that the command does not rebuild or recreate the docker image.
+### Run with hosted Postgres(DB)
+If you prefer a hosted Postgres service like GCP, AWS, DigitalOcean, you can create a hosted Postegres and config .env file with all URLs and private key. You will use the following commands to start the services.
+
+#### Start services
+```
+docker-compose -f docker-compose.yaml up -d
+```
+
+#### Stop services
+```
 docker-compose -f docker-compose.yaml stop
+```
 
-#restart
+#### Restart
+```
 docker-compose -f docker-compose.yaml restart
 ```
 
-### Validator Monitor Service
-modify the configuration of DATABASE_URL in ./conf/monitor.yaml and then 
+### Run Monitor Service Only
+If you prefer to run individual servies on different servers, a more secure setup, here are the commands to run signature service only.
+
+Config `.env` file or `confg/validator.monitor.yaml`
 ```bash
 #start
 docker-compose -f docker-compose.yaml up -d iotube-validator-monitor
@@ -25,21 +54,19 @@ docker-compose -f docker-compose.yaml stop iotube-validator-monitor
 docker-compose -f docker-compose.yaml restart iotube-validator-monitor
 ```
 
-### Validator Signature Service
-modify the configuration of DATABASE_URL,PRIVATE_KEY in ./conf/signer.yaml and then
-
+### Run Signer Service Only
+Config `.env` file or `confg/validator.signer.yaml`
 ```bash
-#start
+# start
 docker-compose -f docker-compose.yaml up -d iotube-validator-signer
-#stop
+# stop
 docker-compose -f docker-compose.yaml stop iotube-validator-signer
 #restart
 docker-compose -f docker-compose.yaml restart iotube-validator-signer
 ```
 
-### Validator Query Service
-modify the configuration of DATABASE_URL,VALIDATOR_ADDRESS in ./conf/api.yaml  and then
-
+### Run API Service Only
+Config `.env` file or `confg/validator.api.yaml`
 ```bash
 #start
 docker-compose -f docker-compose.yaml up -d iotube-validator-api
@@ -47,9 +74,4 @@ docker-compose -f docker-compose.yaml up -d iotube-validator-api
 docker-compose -f docker-compose.yaml stop iotube-validator-api
 #restart
 docker-compose -f docker-compose.yaml restart iotube-validator-api
-```
-
-### Build image
-```bash
-docker build -t iotube/iotube-validator-service:latest ..
 ```

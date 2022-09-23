@@ -1,8 +1,12 @@
-# iotube validator service
+# ioTube validator service
 
-iotube services for validator and relayer
+ioTube services for validator and relayer
 
-## Get Started
+## Get Started with Docker
+The recommended way to run the validator service is using docker.
+Please see [docker/README.md](docker/README.md) for more details.
+
+## Get Started with Binary
 ### Requirement
 * Postgres Database
 * Golang 1.8.0
@@ -10,9 +14,6 @@ iotube services for validator and relayer
 
 ### Build Executables
 `make build`
-
-## Being A Validator
-As a validator, you need to start three services as follows:
 
 ### Validator Monitor Service
 Validator monitor is a service to monitor the events of the tube contracts configured in the config file. The events will be processed and written into database for the other services to use.
@@ -24,8 +25,8 @@ This is a service to endorse the transfers by signing them with the validator's 
 
 `./bin/validator -signer validator.signer.yaml`
 
-### Validator Query Service
-Validator query service provides a GRPC API and a http API for public to query the endorsements/signatures of the validator to transfers.
+### Validator API Service
+Validator API service provides a GRPC API and a http API for public to query the endorsements/signatures of the validator to transfers.
 
 `./bin/validator -api validator.api.yaml`
 
@@ -44,3 +45,4 @@ Similar to validator monitor, relayer monitor is a service to monitor the events
 Relay service relays the tasks storing in database.
 
 `./bin/relayer -relay relayer.yaml`
+

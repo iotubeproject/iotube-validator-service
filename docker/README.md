@@ -1,4 +1,4 @@
-# Run services using Docker
+# Run Services using Docker
 ## Build Image
 ```bash
 docker build -t iotube/iotube-validator-service:latest ..
@@ -8,42 +8,41 @@ docker build -t iotube/iotube-validator-service:latest ..
 
 Config .env-db file with validator private key.
 
-To start services
+#### Start all services (monitor, signer, api, DB), run the following command:
 ```
 docker-compose -f docker-compose-db.yaml up -d
 ```
-to start all services including `monitor`, `signer`, `api` and `postgres`.
 
-To stop
+#### Stop
 ```
 docker-compose -f docker-compose-db.yaml stop
 ```
 
-To restart (no rebuilding or recreating docker)
-#restart
+#### Restart
+```
 docker-compose -f docker-compose-db.yaml restart
 ```
-
+Please notet that the command does not rebuild or recreate the docker image.
 ### Run with hosted Postgres(DB)
 If you prefer a hosted Postgres service like GCP, AWS, DigitalOcean, you can create one and config .env file with all URLs and private key.
 
-To start services
+#### Start services
 ```
 docker-compose -f docker-compose.yaml up -d
 ```
 
-To stop services
+#### Stop services
 ```
 docker-compose -f docker-compose.yaml stop
 ```
 
-To restart (no rebuilding or recreating docker)
+#### Restart
 ```
 docker-compose -f docker-compose.yaml restart
 ```
 
 ### Run Monitor Service Only
-If you prefer to run individual servies on different servers (more secure), here are the commands to run signature service only.
+If you prefer to run individual servies on different servers, a more secure setup, here are the commands to run signature service only.
 
 Config `.env` file or `confg/validator.monitor.yaml`
 ```bash
@@ -56,7 +55,6 @@ docker-compose -f docker-compose.yaml restart iotube-validator-monitor
 ```
 
 ### Run Signer Service Only
-If you prefer to run individual servies on different servers (more secure), here are the commands to run signature service only.
 Config `.env` file or `confg/validator.signer.yaml`
 ```bash
 # start

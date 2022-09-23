@@ -3,39 +3,33 @@ version: '2'
 services:
   iotube-validator-api:
     container_name: iotube-validator-api
-    image: iotexdev/iotube-validator-service:latest
+    image: $IMAGE
     restart: always
     ports:
       - 8081:8081
       - 8080:8080
-    # environment:
-    #   VALIDATOR_DB_URL: ''
-    #   VALIDATOR_PRIVATE_KEY: ''
-    #   MONITOR_DB_URL: ''
+    env_file:
+      - .env
     volumes:
       - ./conf/api.yaml:/etc/iotube/api.yaml:ro
     command: validator -api /etc/iotube/api.yaml
   
   iotube-validator-monitor:
     container_name: iotube-validator-monitor
-    image: iotexdev/iotube-validator-service:latest
+    image: $IMAGE
     restart: always
-    # environment:
-    #   VALIDATOR_DB_URL: ''
-    #   VALIDATOR_PRIVATE_KEY: ''
-    #   MONITOR_DB_URL: ''
+    env_file:
+      - .env
     volumes:
       - ./conf/monitor.yaml:/etc/iotube/monitor.yaml:ro
     command: validator -monitor /etc/iotube/monitor.yaml
 
   iotube-validator-signer:
     container_name: iotube-validator-signer
-    image: iotexdev/iotube-validator-service:latest
+    image: $IMAGE
     restart: always
-    # environment:
-    #   VALIDATOR_DB_URL: ''
-    #   VALIDATOR_PRIVATE_KEY: ''
-    #   MONITOR_DB_URL: ''
+    env_file:
+      - .env
     volumes:
       - ./conf/signer.yaml:/etc/iotube/signer.yaml:ro
     command: validator -signer /etc/iotube/signer.yaml

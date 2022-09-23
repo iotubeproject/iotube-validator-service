@@ -1,3 +1,4 @@
+### Check & modify environment variables in .env
 
 
 ### All Service with one click
@@ -47,5 +48,5 @@ docker-compose -f docker-compose.yaml restart iotube-validator-api
 
 ### Build image
 ```bash
-docker build -t org/image_name:image_tag ..
+docker build -t iotube/iotube-validator-service:latest ..
 ```

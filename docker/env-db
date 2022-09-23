@@ -1,3 +1,3 @@
-VALIDATOR_DB_URL=postgresql://pg_user:pg_password@postgres:5432/iotube_validator
-MONITOR_DB_URL=postgresql://pg_user:pg_password@postgres:5432/iotube_validator
+VALIDATOR_DB_URL=postgresql://user:password@postgres:5432/iotube_validator
+MONITOR_DB_URL=postgresql://user:password@postgres:5432/iotube_validator
 #VALIDATOR_PRIVATE_KEY=

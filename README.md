@@ -3,9 +3,8 @@
 iotube services for validator and relayer
 
 ## Get Started with Docker
-The recommended way to run the validator service is using docker. A detailed instruction of runing with docker is
-[run with docker](docker/README.md)
-
+The recommended way to run the validator service is using docker.
+Please see [docker/README.md](docker/README.md) for more details.
 
 ## Get Started with Binary
 ### Requirement

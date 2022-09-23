@@ -22,13 +22,13 @@ services:
       - 8081:8081
       - 8080:8080
     env_file:
-      - env-db
+      - .env-db
     depends_on:
       - postgres
     volumes:
       - ./conf/api.yaml:/etc/iotube/api.yaml:ro
     command: validator -api /etc/iotube/api.yaml
-  
+
   iotube-validator-monitor:
     container_name: iotube-validator-monitor
     image: $IMAGE
@@ -36,7 +36,7 @@ services:
     depends_on:
       - postgres
     env_file:
-      - env-db
+      - .env-db
     volumes:
       - ./conf/monitor.yaml:/etc/iotube/monitor.yaml:ro
     command: validator -monitor /etc/iotube/monitor.yaml
@@ -46,7 +46,7 @@ services:
     image: $IMAGE
     restart: always
     env_file:
-      - env-db
+      - .env-db
     depends_on:
       - postgres
     volumes:

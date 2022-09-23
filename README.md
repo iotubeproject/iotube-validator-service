@@ -2,7 +2,12 @@
 
 iotube services for validator and relayer
 
-## Get Started
+## Get Started with Docker
+The recommended way to run the validator service is using docker. A detailed instruction of runing with docker is
+[run with docker](docker/README.md)
+
+
+## Get Started with Binary
 ### Requirement
 * Postgres Database
 * Golang 1.8.0
@@ -44,3 +49,4 @@ Similar to validator monitor, relayer monitor is a service to monitor the events
 Relay service relays the tasks storing in database.
 
 `./bin/relayer -relay relayer.yaml`
+

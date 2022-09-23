@@ -8,7 +8,7 @@ docker build -t iotube/iotube-validator-service:latest ..
 
 Config .env-db file with validator private key.
 
-#### Start all services (monitor, signer, api, DB), run the following command:
+#### Start all services (monitor, signer, api, DB)
 ```
 docker-compose -f docker-compose-db.yaml up -d
 ```
@@ -24,7 +24,7 @@ docker-compose -f docker-compose-db.yaml restart
 ```
 Please notet that the command does not rebuild or recreate the docker image.
 ### Run with hosted Postgres(DB)
-If you prefer a hosted Postgres service like GCP, AWS, DigitalOcean, you can create one and config .env file with all URLs and private key.
+If you prefer a hosted Postgres service like GCP, AWS, DigitalOcean, you can create a hosted Postegres and config .env file with all URLs and private key. You will use the following commands to start the services.
 
 #### Start services
 ```

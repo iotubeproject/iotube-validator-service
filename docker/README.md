@@ -1,14 +1,26 @@
 # Run Services using Docker
-## Build Image
+
+There are three ways to run docker services in this doc. 
+1. Run with self hosted DB (PostgreSQL)
+2. Run with hosted DB (PostgreSQL)
+3. Run services on different nodes.
+
+For 1, 2, it is not very secure set up because API server's IP will be exposed. If you use 1,2, please use proxy server like CloudFlare to proxy all tranfic and hide the server IP. 
+
+For 3, API server is separate from signer service; it is more secure. Still, a proxy server will make it more secure and is recommended.
+
+No mater which setups, you will need to build all images first.
+
+## 0. Build Image
 ```bash
 docker build -t iotube/iotube-validator-service:latest ..
 ```
 
-### Run with self hosted Postgres(DB)
+## 1. Run with self hosted DB(PostgreSQL)
 
-Config .env-db file with validator private key.
+Edit `.env-db` file with validator private key (DB_URLs have been pre-configured.)
 
-#### Start all services (monitor, signer, api, DB)
+#### Start all services (monitor, signer, API, DB)
 ```
 docker-compose -f docker-compose-db.yaml up -d
 ```
@@ -23,10 +35,11 @@ docker-compose -f docker-compose-db.yaml stop
 docker-compose -f docker-compose-db.yaml restart
 ```
 Please notet that the command does not rebuild or recreate the docker image.
-### Run with hosted Postgres(DB)
-If you prefer a hosted Postgres service like GCP, AWS, DigitalOcean, you can create a hosted Postegres and config .env file with all URLs and private key. You will use the following commands to start the services.
 
-#### Start services
+## 2. Run with hosted Postgres(DB)
+If you prefer a hosted Postgres service like GCP, AWS, DigitalOcean, you can edit `.env` file with all URLs (please use DB connection strings) and private key. Then you can use the following commands to start the services.
+
+#### Start services (monitor, singer, API)
 ```
 docker-compose -f docker-compose.yaml up -d
 ```
@@ -41,8 +54,10 @@ docker-compose -f docker-compose.yaml stop
 docker-compose -f docker-compose.yaml restart
 ```
 
+## 3. Run Services on Different Nodes
+If you prefer to run different servies on different Nodes, here are the commands to run them.
 ### Run Monitor Service Only
-If you prefer to run individual servies on different servers, a more secure setup, here are the commands to run signature service only.
+
 
 Config `.env` file or `confg/validator.monitor.yaml`
 ```bash
